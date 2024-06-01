@@ -1,0 +1,7 @@
+add_subdirectory(camera)
+add_subdirectory(components)
+add_subdirectory(entities)
+add_subdirectory(input)
+add_subdirectory(math)
+add_subdirectory(renderer)
+add_subdirectory(world)
