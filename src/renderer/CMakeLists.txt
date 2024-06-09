@@ -1,6 +1,5 @@
-find_package(GLEW REQUIRED)
-find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
 
 set(SOURCES
     OpenGLRenderer.cpp
@@ -16,6 +15,4 @@ target_link_libraries(renderer
     world
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARIES}
-    ${GLEW_LIBRARIES}
-    ${GLFW_LIBRARIES}
 )
