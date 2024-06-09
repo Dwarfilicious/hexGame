@@ -23,5 +23,5 @@ public:
     const Transform& getTransform() const;
     void setTransform(const Transform& transform);
 
-    virtual const Mesh& getMesh() const { throw std::runtime_error("Not implemented"); };
+    const Mesh& getMesh() const;
 };

@@ -13,3 +13,7 @@ const Transform& Entity::getTransform() const {
 void Entity::setTransform(const Transform& transform) {
     this->transform = transform;
 }
+
+const Mesh& Entity::getMesh() const {
+    return mesh;
+}

@@ -18,6 +18,4 @@ private:
 
 public:
     Tile(Vector3 center, float radius = 1.0f);
-
-    const Mesh& getMesh() const override;
 };

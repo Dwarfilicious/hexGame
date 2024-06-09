@@ -35,7 +35,3 @@ Tile::Tile(Vector3 center, float radius)
         mesh.addIndex(i % 6 + 1);
     }
 }
-
-const Mesh& Tile::getMesh() const {
-    return mesh;
-}
