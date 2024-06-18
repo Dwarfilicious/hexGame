@@ -2,14 +2,19 @@
  * Date of creation: 23-05-2024 */
 
 #include "InputHandler.hpp"
+#include "GlobalVariables.hpp"
 
 #include <GL/glut.h>
-
-InputHandler* gInputHandler = nullptr;
 
 void globalHandleKeyboard(unsigned char key, int x, int y) {
     if (gInputHandler) {
         gInputHandler->handleKeyboard(key, x, y);
+    }
+}
+
+void globalHandleKeyboardUp(unsigned char key, int x, int y) {
+    if (gInputHandler) {
+        gInputHandler->handleKeyboardUp(key, x, y);
     }
 }
 
@@ -24,6 +29,7 @@ InputHandler::InputHandler(Camera* camera) {
 
     gInputHandler = this;
     glutKeyboardFunc(globalHandleKeyboard);
+    glutKeyboardUpFunc(globalHandleKeyboardUp);
     glutMouseFunc(globalHandleMouse);
 }
 
@@ -31,6 +37,14 @@ void InputHandler::handleKeyboard(unsigned char key, int x, int y) {
     responder->handleKeyboard(key, x, y);
 }
 
+void InputHandler::handleKeyboardUp(unsigned char key, int x, int y) {
+    responder->handleKeyboardUp(key, x, y);
+}
+
 void InputHandler::handleMouse(int button, int state, int x, int y) {
     responder->handleMouse(button, state, x, y);
+}
+
+void InputHandler::update(float deltaTime) {
+    responder->update(deltaTime);
 }

@@ -16,6 +16,5 @@ public:
     OpenGLRenderer(int argc, char** argv, const World& world, const Camera& camera);
 
     void render();
-    // void RenderUI(const GameState& gameState);
-    void run();
+    float calcDeltaTime();
 };

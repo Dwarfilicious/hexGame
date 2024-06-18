@@ -19,13 +19,13 @@ public:
     Vector3& operator-=(const Vector3& other);
     Vector3& operator*=(float scalar);
     Vector3& operator/=(float scalar);
-    float Dot(const Vector3& other) const;
-    Vector3 Cross(const Vector3& other) const;
+    float dot(const Vector3& other) const;
+    Vector3 cross(const Vector3& other) const;
 
-    float Magnitude() const;
-    Vector3 Normalized() const;
+    float magnitude() const;
+    Vector3 normalized() const;
 
-    void Normalize();
+    void normalize();
 
     bool operator==(const Vector3& other) const;
     bool operator!=(const Vector3& other) const;

@@ -5,23 +5,15 @@
 #include "Vertex.hpp"
 #include "Entity.hpp"
 #include "Color.hpp"
+#include "GlobalVariables.hpp"
 
 #include <GL/glut.h>
-
-OpenGLRenderer* gRenderer = nullptr;
-
-#include <iostream>
 
 void globalDisplayCallback() {
     if (gRenderer) {
         gRenderer->render();
         glutSwapBuffers();
     }
-}
-
-void globalTimerCallback(int value) {
-    glutPostRedisplay();
-    glutTimerFunc(1000 / 144, globalTimerCallback, 0);
 }
 
 OpenGLRenderer::OpenGLRenderer(int argc, char** argv, const World& world, const Camera& camera)
@@ -31,10 +23,7 @@ OpenGLRenderer::OpenGLRenderer(int argc, char** argv, const World& world, const 
     glutInitWindowSize(1200, 675);
     glutCreateWindow("hexGame");
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-    gRenderer = this;
     glutDisplayFunc(globalDisplayCallback);
-    glutTimerFunc(1000 / 60, globalTimerCallback, 0);
 }
 
 void OpenGLRenderer::render() {
@@ -70,6 +59,10 @@ void OpenGLRenderer::render() {
     }
 }
 
-void OpenGLRenderer::run() {
-    glutMainLoop();
+float OpenGLRenderer::calcDeltaTime() {
+    static int previousTime = glutGet(GLUT_ELAPSED_TIME);
+    int currentTime = glutGet(GLUT_ELAPSED_TIME);
+    float deltaTime = (currentTime - previousTime) / 1000.0f;
+    previousTime = currentTime;
+    return deltaTime;
 }

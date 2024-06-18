@@ -5,4 +5,5 @@ target_link_libraries(renderTest
     input
     renderer
     world
+    globalVars
 )

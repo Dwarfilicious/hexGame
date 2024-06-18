@@ -52,30 +52,30 @@ Vector3& Vector3::operator/=(float scalar) {
     return *this;
 }
 
-float Vector3::Dot(const Vector3& other) const {
+float Vector3::dot(const Vector3& other) const {
     return x * other.x + y * other.y + z * other.z;
 }
 
-Vector3 Vector3::Cross(const Vector3& other) const {
+Vector3 Vector3::cross(const Vector3& other) const {
     return Vector3(y * other.z - z * other.y,
                    z * other.x - x * other.z,
                    x * other.y - y * other.x);
 }
 
-float Vector3::Magnitude() const {
+float Vector3::magnitude() const {
     return std::sqrt(x * x + y * y + z * z);
 }
 
-Vector3 Vector3::Normalized() const {
-    float magnitude = Magnitude();
-    return Vector3(x / magnitude, y / magnitude, z / magnitude);
+Vector3 Vector3::normalized() const {
+    float mag = magnitude();
+    return Vector3(x / mag, y / mag, z / mag);
 }
 
-void Vector3::Normalize() {
-    float magnitude = Magnitude();
-    x /= magnitude;
-    y /= magnitude;
-    z /= magnitude;
+void Vector3::normalize() {
+    float mag = magnitude();
+    x /= mag;
+    y /= mag;
+    z /= mag;
 }
 
 bool Vector3::operator==(const Vector3& other) const {

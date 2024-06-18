@@ -13,6 +13,7 @@ target_link_libraries(renderer
     components
     entities
     world
+    globalVars
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARIES}
 )

@@ -17,6 +17,10 @@ const Transform &Camera::getTransform() const {
     return transform;
 }
 
+float Camera::getCameraVelocity() const {
+    return cameraVelocity;
+}
+
 void Camera::move(const Vector3& direction) {
     transform.position += direction;
 }
