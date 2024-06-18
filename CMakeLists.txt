@@ -5,6 +5,9 @@ project(hexGame)
 add_subdirectory(src)
 add_subdirectory(test)
 
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+
 add_executable(${PROJECT_NAME} game.cpp)
 target_link_libraries(${PROJECT_NAME}
     camera
