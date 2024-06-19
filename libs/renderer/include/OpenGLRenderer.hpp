@@ -4,19 +4,19 @@
 
 #pragma once
 
-#include "World.hpp"
+#include "EntityContainer.hpp"
 #include "Camera.hpp"
 
 #include <GLFW/glfw3.h>
 
 class OpenGLRenderer {
 private:
-    const World& world;
+    const EntityContainer& entityContainer;
     const Camera& camera;
     GLFWwindow* window;
 
 public:
-    OpenGLRenderer(int argc, char** argv, const World& world, const Camera& camera);
+    OpenGLRenderer(int argc, char** argv, const EntityContainer& entityContainer, const Camera& camera);
 
     GLFWwindow* getWindow() const { return window; }
 

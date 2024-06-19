@@ -2,6 +2,8 @@
  * Date of creation: 21-05-2024
  * Main executable for the game */
 
+#include "Vector3.hpp"
+#include "Quaternion.hpp"
 #include "World.hpp"
 #include "Camera.hpp"
 #include "OpenGLRenderer.hpp"
@@ -19,7 +21,7 @@ int main(int argc, char** argv) {
     Quaternion cameraRotation(1.0f, 0.0f, 0.0f, 0.0f);
     Camera camera(Transform(cameraPosition, cameraRotation));
 
-    OpenGLRenderer renderer(argc, argv, world, camera);
+    OpenGLRenderer renderer(argc, argv, world.getEntityContainer(), camera);
 
     InputHandler inputHandler(&camera, renderer.getWindow());
 

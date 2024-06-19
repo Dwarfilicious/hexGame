@@ -1,11 +1,16 @@
 find_package(glfw3 REQUIRED)
 
-set(SOURCES
+add_library(input STATIC
     InputHandler.cpp
     InputResponder.cpp
 )
 
-add_library(input ${SOURCES})
+target_include_directories(input PUBLIC
+    ${CMAKE_SOURCE_DIR}/include/input
+)
 
-target_include_directories(input PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(input PUBLIC math camera components glfw3)
+target_link_libraries(input PUBLIC
+    math
+    ecs
+    glfw3
+)

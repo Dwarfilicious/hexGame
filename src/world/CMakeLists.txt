@@ -1,8 +1,14 @@
-set(SOURCES
+add_library(world
     World.cpp
+    TileTypes.cpp
+    Tile.cpp
 )
 
-add_library(world ${SOURCES})
+target_include_directories(world PUBLIC
+    ${CMAKE_SOURCE_DIR}/include/world
+)
 
-target_include_directories(world PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(world PUBLIC entities)
+target_link_libraries(world PUBLIC
+    math
+    ecs
+)

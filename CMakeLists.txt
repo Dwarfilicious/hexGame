@@ -4,16 +4,18 @@ project(hexGame)
 include_directories(include)
 
 add_subdirectory(src)
+add_subdirectory(libs)
 
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 
 add_executable(${PROJECT_NAME} game.cpp)
 target_link_libraries(${PROJECT_NAME}
-    camera
-    input
+    math
+    ecs
     renderer
     world
+    input
     ${OPENGL_LIBRARIES}
     glfw3
 )

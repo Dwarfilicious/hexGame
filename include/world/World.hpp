@@ -5,18 +5,18 @@
 
 #pragma once
 
-#include "Entity.hpp"
+#include "EntityContainer.hpp"
 
 #include <vector>
 #include <memory>
 
 class World {
 private:
-    std::vector<std::unique_ptr<Entity>> entities;
+    EntityContainer entityContainer;
 
 public:
     World(int q, int r, float tileRadius = 1.0f);
 
+    const EntityContainer& getEntityContainer() const;
     const std::vector<std::unique_ptr<Entity>>& getEntities() const;
-    void addEntity(std::unique_ptr<Entity> entity);
 };

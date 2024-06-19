@@ -10,8 +10,8 @@
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 
-OpenGLRenderer::OpenGLRenderer(int argc, char** argv, const World& world, const Camera& camera)
-    : world(world), camera(camera) {
+OpenGLRenderer::OpenGLRenderer(int argc, char** argv, const EntityContainer& entityContainer, const Camera& camera)
+    : entityContainer(entityContainer), camera(camera) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return;
@@ -40,7 +40,7 @@ void OpenGLRenderer::render() {
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(camera.getViewMatrix().data);
 
-    for (const auto& entity : world.getEntities()) {
+    for (const auto& entity : entityContainer.getEntities()) {
         glPushMatrix();
         glMultMatrixf(entity->getTransform().getMatrix().data);
 

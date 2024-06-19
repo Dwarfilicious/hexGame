@@ -14,15 +14,15 @@ World::World(int q, int r, float tileRadius) {
         for (int j = 0; j < r; j++) {
             float x = (tileWidth / 2.0f) * (i + (j / 2.0f));
             float y = (3.0f / 4.0f) * tileHeight * (j / 2.0f);
-            entities.push_back(std::make_unique<Tile>(Vector3(x, y, 0), tileRadius));
+            entityContainer.addEntity(std::make_unique<Tile>(Vector3(x, y, 0), tileRadius));
         }
     }
 }
 
-const std::vector<std::unique_ptr<Entity>>& World::getEntities() const {
-    return entities;
+const EntityContainer& World::getEntityContainer() const {
+    return entityContainer;
 }
 
-void World::addEntity(std::unique_ptr<Entity> entity) {
-    entities.push_back(std::move(entity));
+const std::vector<std::unique_ptr<Entity>>& World::getEntities() const {
+    return entityContainer.getEntities();
 }

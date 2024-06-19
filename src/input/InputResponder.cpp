@@ -2,10 +2,10 @@
  * Date of creation: 23-05-2024 */
 
 #include "math.hpp"
-#include "InputResponder.hpp"
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
 #include "Transform.hpp"
+#include "InputResponder.hpp"
 
 #include <fstream>
 #include <sstream>

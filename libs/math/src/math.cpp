@@ -1,7 +1,7 @@
 /* Author: Bas Zoeteman
  * Date of creation: 23-05-2024 */
 
-#include "Math.hpp"
+#include "math.hpp"
 
 Vector3 operator*(float scalar, const Vector3& vector) {
     return Vector3(scalar * vector.x, scalar * vector.y, scalar * vector.z);
