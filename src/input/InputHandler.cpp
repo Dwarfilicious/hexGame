@@ -2,47 +2,22 @@
  * Date of creation: 23-05-2024 */
 
 #include "InputHandler.hpp"
-#include "GlobalVariables.hpp"
 
-#include <GL/glut.h>
+InputHandler* gHandler = nullptr;
 
-void globalHandleKeyboard(unsigned char key, int x, int y) {
-    if (gInputHandler) {
-        gInputHandler->handleKeyboard(key, x, y);
-    }
+void globalKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    gHandler->handleKeyboard(window, key, scancode, action, mods);
 }
 
-void globalHandleKeyboardUp(unsigned char key, int x, int y) {
-    if (gInputHandler) {
-        gInputHandler->handleKeyboardUp(key, x, y);
-    }
-}
-
-void globalHandleMouse(int button, int state, int x, int y) {
-    if (gInputHandler) {
-        gInputHandler->handleMouse(button, state, x, y);
-    }
-}
-
-InputHandler::InputHandler(Camera* camera) {
+InputHandler::InputHandler(Camera* camera, GLFWwindow* window) {
     responder = new InputResponder(camera);
 
-    gInputHandler = this;
-    glutKeyboardFunc(globalHandleKeyboard);
-    glutKeyboardUpFunc(globalHandleKeyboardUp);
-    glutMouseFunc(globalHandleMouse);
+    gHandler = this;
+    glfwSetKeyCallback(window, globalKeyCallback);
 }
 
-void InputHandler::handleKeyboard(unsigned char key, int x, int y) {
-    responder->handleKeyboard(key, x, y);
-}
-
-void InputHandler::handleKeyboardUp(unsigned char key, int x, int y) {
-    responder->handleKeyboardUp(key, x, y);
-}
-
-void InputHandler::handleMouse(int button, int state, int x, int y) {
-    responder->handleMouse(button, state, x, y);
+void InputHandler::handleKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    responder->handleKeyboard(key, action, mods);
 }
 
 void InputHandler::update(float deltaTime) {

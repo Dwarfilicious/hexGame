@@ -8,18 +8,19 @@
 #include "Camera.hpp"
 
 #include <unordered_map>
+#include <string>
+#include <vector>
 
 class InputResponder {
 private:
     Camera* camera;
-    std::unordered_map<char, bool> keyStates;
+    std::unordered_map<std::string, std::vector<int>> keybinds;
+    std::unordered_map<int, bool> keyStates;
 
 public:
     InputResponder(Camera* camera);
 
-    void handleKeyboard(unsigned char key, int x, int y);
-    void handleKeyboardUp(unsigned char key, int x, int y);
-
+    void handleKeyboard(int key, int action, int mods);
     void handleMouse(int button, int state, int x, int y);
 
     void update(float deltaTime);

@@ -1,5 +1,4 @@
-find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
+find_package(glfw3 REQUIRED)
 
 set(SOURCES
     OpenGLRenderer.cpp
@@ -13,7 +12,5 @@ target_link_libraries(renderer
     components
     entities
     world
-    globalVars
-    ${OPENGL_LIBRARIES}
-    ${GLUT_LIBRARIES}
+    glfw3
 )

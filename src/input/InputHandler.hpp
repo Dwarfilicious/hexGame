@@ -9,16 +9,16 @@
 #include "InputResponder.hpp"
 #include "Camera.hpp"
 
+#include <GLFW/glfw3.h>
+
 class InputHandler {
 private:
     InputResponder* responder;
 
 public:
-    InputHandler(Camera* camera);
+    InputHandler(Camera* camera, GLFWwindow* window);
 
-    void handleKeyboard(unsigned char key, int x, int y);
-    void handleKeyboardUp(unsigned char key, int x, int y);
-
+    void handleKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods);
     void handleMouse(int button, int state, int x, int y);
 
     void update(float deltaTime);

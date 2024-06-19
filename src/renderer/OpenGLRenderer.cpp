@@ -5,25 +5,27 @@
 #include "Vertex.hpp"
 #include "Entity.hpp"
 #include "Color.hpp"
-#include "GlobalVariables.hpp"
 
-#include <GL/glut.h>
-
-void globalDisplayCallback() {
-    if (gRenderer) {
-        gRenderer->render();
-        glutSwapBuffers();
-    }
-}
+#include <iostream>
+#include <GLFW/glfw3.h>
+#include <GL/gl.h>
 
 OpenGLRenderer::OpenGLRenderer(int argc, char** argv, const World& world, const Camera& camera)
     : world(world), camera(camera) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(1200, 675);
-    glutCreateWindow("hexGame");
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return;
+    }
+
+    window = glfwCreateWindow(1200, 675, "hexGame", NULL, NULL);
+    if (!window) {
+        std::cerr << "Failed to create window" << std::endl;
+        glfwTerminate();
+        return;
+    }
+
+    glfwMakeContextCurrent(window);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glutDisplayFunc(globalDisplayCallback);
 }
 
 void OpenGLRenderer::render() {
@@ -31,8 +33,8 @@ void OpenGLRenderer::render() {
     glLoadIdentity();
 
     glMatrixMode(GL_PROJECTION);
-    int windowWidth = glutGet(GLUT_WINDOW_WIDTH);
-    int windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+    int windowWidth, windowHeight;
+    glfwGetWindowSize(window, &windowWidth, &windowHeight);
     glLoadMatrixf(camera.getProjectionMatrix(windowWidth, windowHeight).data);
 
     glMatrixMode(GL_MODELVIEW);
@@ -60,9 +62,9 @@ void OpenGLRenderer::render() {
 }
 
 float OpenGLRenderer::calcDeltaTime() {
-    static int previousTime = glutGet(GLUT_ELAPSED_TIME);
-    int currentTime = glutGet(GLUT_ELAPSED_TIME);
-    float deltaTime = (currentTime - previousTime) / 1000.0f;
+    static double previousTime = glfwGetTime();
+    double currentTime = glfwGetTime();
+    float deltaTime = (float)(currentTime - previousTime);
     previousTime = currentTime;
     return deltaTime;
 }

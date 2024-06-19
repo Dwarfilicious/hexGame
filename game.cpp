@@ -6,23 +6,11 @@
 #include "Camera.hpp"
 #include "OpenGLRenderer.hpp"
 #include "InputHandler.hpp"
-#include "GlobalVariables.hpp"
 
 #include <cmath>
-#include <GL/glut.h>
-
-OpenGLRenderer* gRenderer = nullptr;
-InputHandler* gInputHandler = nullptr;
-
-void timerFunc(int value) {
-    if (gRenderer) {
-        float deltaTime = gRenderer->calcDeltaTime();
-        gInputHandler->update(deltaTime);
-        glutPostRedisplay();
-    }
-
-    glutTimerFunc(1000 / 240, timerFunc, 0);
-}
+#include <chrono>
+#include <thread>
+#include <GLFW/glfw3.h>
 
 int main(int argc, char** argv) {
     World world(80, 60, 1.0f);
@@ -32,13 +20,25 @@ int main(int argc, char** argv) {
     Camera camera(Transform(cameraPosition, cameraRotation));
 
     OpenGLRenderer renderer(argc, argv, world, camera);
-    gRenderer = &renderer;
 
-    InputHandler inputHandler(&camera);
-    gRenderer = &renderer;
+    InputHandler inputHandler(&camera, renderer.getWindow());
 
-    glutTimerFunc(1000 / 240, timerFunc, 0);
-    glutMainLoop();
+    const std::chrono::milliseconds desiredFrameTime(1000 / 240);
+    while (!glfwWindowShouldClose(renderer.getWindow())) {
+        auto start = std::chrono::steady_clock::now();
+
+        float deltaTime = renderer.calcDeltaTime();
+        inputHandler.update(deltaTime);
+        renderer.render();
+        glfwPollEvents();
+        glfwSwapBuffers(renderer.getWindow());
+
+        auto end = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        if (elapsed < desiredFrameTime) {
+            std::this_thread::sleep_for(desiredFrameTime - elapsed);
+        }
+    }
 
     return 0;
 }
