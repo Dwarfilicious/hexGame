@@ -21,5 +21,5 @@ public:
     GLFWwindow* getWindow() const { return window; }
 
     void render();
-    float calcDeltaTime();
+    double calcDeltaTime();
 };

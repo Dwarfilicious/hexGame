@@ -2,7 +2,7 @@ find_package(glfw3 REQUIRED)
 
 add_library(input STATIC
     InputHandler.cpp
-    InputResponder.cpp
+    CameraController.cpp
 )
 
 target_include_directories(input PUBLIC

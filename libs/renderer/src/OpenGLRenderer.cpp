@@ -61,10 +61,10 @@ void OpenGLRenderer::render() {
     }
 }
 
-float OpenGLRenderer::calcDeltaTime() {
+double OpenGLRenderer::calcDeltaTime() {
     static double previousTime = glfwGetTime();
     double currentTime = glfwGetTime();
-    float deltaTime = (float)(currentTime - previousTime);
+    double deltaTime = currentTime - previousTime;
     previousTime = currentTime;
     return deltaTime;
 }

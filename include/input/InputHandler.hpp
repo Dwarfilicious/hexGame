@@ -6,20 +6,22 @@
 
 #pragma once
 
-#include "InputResponder.hpp"
-#include "Camera.hpp"
-
+#include <unordered_map>
+#include <string>
+#include <vector>
 #include <GLFW/glfw3.h>
 
 class InputHandler {
 private:
-    InputResponder* responder;
+    std::unordered_map<std::string, std::vector<int>> keybinds;
+    std::unordered_map<int, bool> keyStates;
 
 public:
-    InputHandler(Camera* camera, GLFWwindow* window);
+    InputHandler(GLFWwindow* window);
 
     void handleKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods);
     void handleMouse(int button, int state, int x, int y);
 
-    void update(float deltaTime);
+    const std::unordered_map<std::string, std::vector<int>>& getKeybinds() const { return keybinds; }
+    const std::unordered_map<int, bool>& getKeyStates() const { return keyStates; }
 };

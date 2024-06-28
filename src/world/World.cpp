@@ -10,6 +10,9 @@ World::World(int q, int r, float tileRadius) {
     float tileWidth = tileRadius * std::sqrt(3.0);
     float tileHeight = 2 * tileRadius;
 
+    width = tileWidth * q;
+    height = tileHeight * r;
+
     for (int i = 0; i < q; i++) {
         for (int j = 0; j < r; j++) {
             float x = (tileWidth / 2.0f) * (i + (j / 2.0f));
@@ -25,4 +28,12 @@ const EntityContainer& World::getEntityContainer() const {
 
 const std::vector<std::unique_ptr<Entity>>& World::getEntities() const {
     return entityContainer.getEntities();
+}
+
+float World::getWidth() const {
+    return width;
+}
+
+float World::getHeight() const {
+    return height;
 }

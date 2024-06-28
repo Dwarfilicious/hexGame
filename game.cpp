@@ -8,6 +8,7 @@
 #include "Camera.hpp"
 #include "OpenGLRenderer.hpp"
 #include "InputHandler.hpp"
+#include "CameraController.hpp"
 
 #include <cmath>
 #include <chrono>
@@ -15,7 +16,7 @@
 #include <GLFW/glfw3.h>
 
 int main(int argc, char** argv) {
-    World world(80, 60, 1.0f);
+    World world(30, 25, 1.0f);
 
     Vector3 cameraPosition(0.0f, 0.0f, 10.0f);
     Quaternion cameraRotation(1.0f, 0.0f, 0.0f, 0.0f);
@@ -23,22 +24,38 @@ int main(int argc, char** argv) {
 
     OpenGLRenderer renderer(argc, argv, world.getEntityContainer(), camera);
 
-    InputHandler inputHandler(&camera, renderer.getWindow());
+    InputHandler inputHandler(renderer.getWindow());
+    CameraController cameraController(&camera, &inputHandler);
 
-    const std::chrono::milliseconds desiredFrameTime(1000 / 240);
+    const double desiredFrameTime = 1.0 / 240.0;
+    unsigned int frameCount = 0;
+    double lastTime = glfwGetTime();
+
     while (!glfwWindowShouldClose(renderer.getWindow())) {
-        auto start = std::chrono::steady_clock::now();
+        double start = glfwGetTime();
 
-        float deltaTime = renderer.calcDeltaTime();
-        inputHandler.update(deltaTime);
-        renderer.render();
         glfwPollEvents();
+        double deltaTime = renderer.calcDeltaTime();
+        cameraController.update(deltaTime);
+        renderer.render();
         glfwSwapBuffers(renderer.getWindow());
 
-        auto end = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        if (elapsed < desiredFrameTime) {
-            std::this_thread::sleep_for(desiredFrameTime - elapsed);
+        frameCount++;
+        double currentTime = glfwGetTime();
+        auto timeDiff = currentTime - lastTime;
+        if (timeDiff >= 1.0) {
+            double fps = frameCount / timeDiff;
+            frameCount = 0;
+            lastTime = currentTime;
+            std::string fpsTitle = "hexGame | FPS: " + std::to_string(fps);
+            glfwSetWindowTitle(renderer.getWindow(), fpsTitle.c_str());
+        }
+
+        double end = glfwGetTime();
+        double timeToWait = desiredFrameTime - (end - start);
+        while (timeToWait > 0) {
+            end = glfwGetTime();
+            timeToWait = desiredFrameTime - (end - start);
         }
     }
 

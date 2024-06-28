@@ -13,10 +13,15 @@
 class World {
 private:
     EntityContainer entityContainer;
+    float width;
+    float height;
 
 public:
     World(int q, int r, float tileRadius = 1.0f);
 
     const EntityContainer& getEntityContainer() const;
     const std::vector<std::unique_ptr<Entity>>& getEntities() const;
+
+    float getWidth() const;
+    float getHeight() const;
 };
