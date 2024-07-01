@@ -9,11 +9,10 @@
 #include "Color.hpp"
 
 class Vertex {
-private:
+public:
     Vector3 position;
     Color color;
 
-public:
     Vertex(Vector3 position = Vector3(), Color color = Color());
 
     const Vector3& getPosition() const;

@@ -1,8 +1,7 @@
 /* Author: Bas Zoeteman
  * Date of creation: 23-05-2024
  * Contains a class InputHandler that holds the functions
- * required for handling input. Makes use of the InputResponder
- * to respond to the received input. */
+ * required for handling input. */
 
 #pragma once
 
@@ -13,15 +12,22 @@
 
 class InputHandler {
 private:
-    std::unordered_map<std::string, std::vector<int>> keybinds;
-    std::unordered_map<int, bool> keyStates;
+    GLFWwindow* window;
+
+    std::unordered_map<std::string, std::vector<int>> controls;
+    std::unordered_map<int, bool> buttonStates;
 
 public:
     InputHandler(GLFWwindow* window);
 
     void handleKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods);
-    void handleMouse(int button, int state, int x, int y);
+    void handleMouseButton(GLFWwindow* window, int button, int action, int mods);
+    void handleCursorPos(GLFWwindow* window, double xpos, double ypos);
+    void handleScroll(GLFWwindow* window, double xoffset, double yoffset);
 
-    const std::unordered_map<std::string, std::vector<int>>& getKeybinds() const { return keybinds; }
-    const std::unordered_map<int, bool>& getKeyStates() const { return keyStates; }
+    GLFWwindow* getWindow() const { return window; }
+    void getWindowSize(int& width, int& height) const;
+
+    const std::unordered_map<std::string, std::vector<int>>& getControls() const { return controls; }
+    const std::unordered_map<int, bool>& getButtonStates() const { return buttonStates; }
 };

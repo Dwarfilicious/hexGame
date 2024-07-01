@@ -5,31 +5,31 @@
 
 CameraController::CameraController(Camera* camera, InputHandler* inputHandler)
 : camera(camera), inputHandler(inputHandler),
-  keybinds(inputHandler->getKeybinds()), keyStates(inputHandler->getKeyStates()) {}
+  controls(inputHandler->getControls()), buttonStates(inputHandler->getButtonStates()) {}
 
-void CameraController::update(double deltaTime) {
+void CameraController::cameraMovement(double deltaTime) {
     const Transform& cameraTransform = camera->getTransform();
     Vector3 cameraPosition = cameraTransform.position;
     Quaternion cameraRotation = cameraTransform.rotation;
 
     Vector3 cameraDirection = Vector3(0.0f, 0.0f, 0.0f);
-    for (const auto& key : keybinds.at("move_up")) {
-        if (keyStates.at(key)) {
+    for (const auto& button : controls.at("move_up")) {
+        if (buttonStates.at(button)) {
             cameraDirection += Vector3(0.0f, 1.0f, 0.0f);
         }
     }
-    for (const auto& key : keybinds.at("move_down")) {
-        if (keyStates.at(key)) {
+    for (const auto& button : controls.at("move_down")) {
+        if (buttonStates.at(button)) {
             cameraDirection += Vector3(0.0f, -1.0f, 0.0f);
         }
     }
-    for (const auto& key : keybinds.at("move_left")) {
-        if (keyStates.at(key)) {
+    for (const auto& button : controls.at("move_left")) {
+        if (buttonStates.at(button)) {
             cameraDirection += Vector3(-1.0f, 0.0f, 0.0f);
         }
     }
-    for (const auto& key : keybinds.at("move_right")) {
-        if (keyStates.at(key)) {
+    for (const auto& button : controls.at("move_right")) {
+        if (buttonStates.at(button)) {
             cameraDirection += Vector3(1.0f, 0.0f, 0.0f);
         }
     }
@@ -38,4 +38,8 @@ void CameraController::update(double deltaTime) {
         cameraDirection.normalize();
         camera->move(cameraDirection * camera->getCameraVelocity() * deltaTime);
     }
+}
+
+void CameraController::update(double deltaTime) {
+    cameraMovement(deltaTime);
 }

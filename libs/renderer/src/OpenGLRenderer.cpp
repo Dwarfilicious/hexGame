@@ -33,9 +33,7 @@ void OpenGLRenderer::render() {
     glLoadIdentity();
 
     glMatrixMode(GL_PROJECTION);
-    int windowWidth, windowHeight;
-    glfwGetWindowSize(window, &windowWidth, &windowHeight);
-    glLoadMatrixf(camera.getProjectionMatrix(windowWidth, windowHeight).data);
+    glLoadMatrixf(camera.getProjectionMatrix().data);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(camera.getViewMatrix().data);

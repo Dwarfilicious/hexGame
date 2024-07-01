@@ -17,8 +17,10 @@ private:
     Camera* camera;
     InputHandler* inputHandler;
 
-    const std::unordered_map<std::string, std::vector<int>>& keybinds;
-    const std::unordered_map<int, bool>& keyStates;
+    const std::unordered_map<std::string, std::vector<int>>& controls;
+    const std::unordered_map<int, bool>& buttonStates;
+
+    void cameraMovement(double deltaTime);
 
 public:
     CameraController(Camera* camera, InputHandler* inputHandler);

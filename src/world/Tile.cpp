@@ -16,17 +16,17 @@ Tile::Tile(Vector3 center, float radius)
     TileType type = getRandomTileType();
     Color color = tileTypeToColor[type];
 
-    Vertex centerVertex = Vertex(center, color);
+    Vertex centerVertex = Vertex(Vector3(0, 0, 0), color);
     mesh.addVertex(centerVertex);
 
     float angle = -M_PI / 2.0f;
     for (int i = 0; i < 6; i++) {
-        Vertex vertex = Vertex(Vector3(center.x + radius * cos(angle),
-                                       center.y + radius * sin(angle),
-                                       center.z),
+        Vertex vertex = Vertex(Vector3(radius * cos(angle),
+                                       radius * sin(angle),
+                                       0),
                                color);
         mesh.addVertex(vertex);
-        angle += 2 * M_PI / 6;
+        angle += M_PI / 3.0f;
     }
 
     for (int i = 1; i <= 6; i++) {

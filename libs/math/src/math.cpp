@@ -28,6 +28,26 @@ Vector3 operator*(const Quaternion& q, const Vector3& v) {
         + 2.0f * s * cross(u, v);
 }
 
+Vector3 operator*(const Matrix4& matrix, const Vector3& vector) {
+    Vector3 result = Vector3(
+        matrix.data[0] * vector.x + matrix.data[4] * vector.y + matrix.data[8] * vector.z + matrix.data[12],
+        matrix.data[1] * vector.x + matrix.data[5] * vector.y + matrix.data[9] * vector.z + matrix.data[13],
+        matrix.data[2] * vector.x + matrix.data[6] * vector.y + matrix.data[10] * vector.z + matrix.data[14]
+    );
+    float w = matrix.data[3] * vector.x + matrix.data[7] * vector.y + matrix.data[11] * vector.z + matrix.data[15];
+
+    return result / w;
+}
+
+Vector4 operator*(const Matrix4& matrix, const Vector4& vector) {
+    return Vector4(
+        matrix.data[0] * vector.x + matrix.data[4] * vector.y + matrix.data[8] * vector.z + matrix.data[12] * vector.w,
+        matrix.data[1] * vector.x + matrix.data[5] * vector.y + matrix.data[9] * vector.z + matrix.data[13] * vector.w,
+        matrix.data[2] * vector.x + matrix.data[6] * vector.y + matrix.data[10] * vector.z + matrix.data[14] * vector.w,
+        matrix.data[3] * vector.x + matrix.data[7] * vector.y + matrix.data[11] * vector.z + matrix.data[15] * vector.w
+    );
+}
+
 Matrix4 convertToTranslationMatrix(const Vector3& translation) {
     Matrix4 result = Matrix4::identity();
     result.data[12] = translation.x;

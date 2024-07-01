@@ -6,6 +6,7 @@
 #pragma once
 
 #include "EntityContainer.hpp"
+#include "Tile.hpp"
 
 #include <vector>
 #include <memory>
@@ -18,6 +19,8 @@ private:
 
 public:
     World(int q, int r, float tileRadius = 1.0f);
+
+    Tile* getTileAt(Vector3 worldPosition) const;
 
     const EntityContainer& getEntityContainer() const;
     const std::vector<std::unique_ptr<Entity>>& getEntities() const;

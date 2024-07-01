@@ -2,40 +2,40 @@
  * Date of creation: 23-05-2024 */
 
 #include "InputHandler.hpp"
-#include "KeybindsMap.hpp"
+#include "ControlsMap.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-std::unordered_map<std::string, std::vector<int>> loadKeybinds() {
-    std::unordered_map<std::string, std::vector<int>> keybinds;
+std::unordered_map<std::string, std::vector<int>> loadControls() {
+    std::unordered_map<std::string, std::vector<int>> controls;
 
     std::string filename = "controls.json";
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Failed to open file " << filename << std::endl;
-        return keybinds;
+        return controls;
     }
 
     nlohmann::json json;
     file >> json;
 
-    for (const auto& keybind : json.items()) {
-        std::string action = keybind.key();
-        std::vector<int> keys;
-        for (const auto& value : keybind.value()) {
-            std::string keyString = value.get<std::string>();
-            if (glfwKeyMap.find(keyString) != glfwKeyMap.end()) {
-                keys.push_back(glfwKeyMap[keyString]);
+    for (const auto& buttons : json.items()) {
+        std::string action = buttons.key();
+        std::vector<int> buttonsList;
+        for (const auto& value : buttons.value()) {
+            std::string buttonString = value.get<std::string>();
+            if (glfwControlsMap.find(buttonString) != glfwControlsMap.end()) {
+                buttonsList.push_back(glfwControlsMap[buttonString]);
             } else {
-                std::cerr << "Unknown key: " << keyString << std::endl;
+                std::cerr << "Unknown key: " << buttonString << std::endl;
             }
         }
-        keybinds[action] = keys;
+        controls[action] = buttonsList;
     }
 
-    return keybinds;
+    return controls;
 }
 
 InputHandler* gHandler = nullptr;
@@ -44,19 +44,56 @@ void globalKeyCallback(GLFWwindow* window, int key, int scancode, int action, in
     gHandler->handleKeyboard(window, key, scancode, action, mods);
 }
 
-InputHandler::InputHandler(GLFWwindow* window) {
-    keybinds = loadKeybinds();
-    for (auto& keybind : keybinds) {
-        for (auto& key : keybind.second) {
-            keyStates[key] = false;
+void globalMouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    gHandler->handleMouseButton(window, button, action, mods);
+}
+
+void globalCursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
+    gHandler->handleCursorPos(window, xpos, ypos);
+}
+
+void globalScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    gHandler->handleScroll(window, xoffset, yoffset);
+}
+
+InputHandler::InputHandler(GLFWwindow* window) : window(window) {
+    controls = loadControls();
+    for (auto& buttons : controls) {
+        for (auto& button : buttons.second) {
+            buttonStates[button] = false;
         }
     }
+    buttonStates[GLFW_MOUSE_BUTTON_LEFT] = false;
+    buttonStates[GLFW_MOUSE_BUTTON_RIGHT] = false;
+    buttonStates[GLFW_KEY_ESCAPE] = false;
+
     gHandler = this;
     glfwSetKeyCallback(window, globalKeyCallback);
+    glfwSetMouseButtonCallback(window, globalMouseButtonCallback);
+    glfwSetCursorPosCallback(window, globalCursorPosCallback);
+    glfwSetScrollCallback(window, globalScrollCallback);
 }
 
 void InputHandler::handleKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (keyStates.find(key) != keyStates.end()) {
-        keyStates[key] = (action == GLFW_PRESS || action == GLFW_REPEAT);
+    if (buttonStates.find(key) != buttonStates.end()) {
+        buttonStates[key] = (action == GLFW_PRESS || action == GLFW_REPEAT);
     }
+}
+
+void InputHandler::handleMouseButton(GLFWwindow* window, int button, int action, int mods) {
+    if (buttonStates.find(button) != buttonStates.end()) {
+        buttonStates[button] = (action == GLFW_PRESS);
+    }
+}
+
+void InputHandler::handleCursorPos(GLFWwindow* window, double xpos, double ypos) {
+    // Do nothing
+}
+
+void InputHandler::handleScroll(GLFWwindow* window, double xoffset, double yoffset) {
+    // Do nothing
+}
+
+void InputHandler::getWindowSize(int& width, int& height) const {
+    glfwGetWindowSize(window, &width, &height);
 }

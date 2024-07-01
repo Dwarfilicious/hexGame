@@ -15,4 +15,5 @@ public:
     Matrix4& operator*=(const Matrix4& other);
 
     static Matrix4 identity();
+    static Matrix4 inverse(const Matrix4& matrix);
 };

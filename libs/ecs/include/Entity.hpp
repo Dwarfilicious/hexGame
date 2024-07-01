@@ -20,8 +20,12 @@ public:
 
     virtual ~Entity() = default;
 
+    bool contains2D(const Vector3& point) const;
+
     const Transform& getTransform() const;
     void setTransform(const Transform& transform);
 
     const Mesh& getMesh() const;
+
+    void setColor(const Color& color);
 };

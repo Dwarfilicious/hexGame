@@ -9,14 +9,12 @@
 #include "OpenGLRenderer.hpp"
 #include "InputHandler.hpp"
 #include "CameraController.hpp"
+#include "WorldController.hpp"
 
-#include <cmath>
-#include <chrono>
-#include <thread>
 #include <GLFW/glfw3.h>
 
 int main(int argc, char** argv) {
-    World world(30, 25, 1.0f);
+    World world(30, 10, 1.0f);
 
     Vector3 cameraPosition(0.0f, 0.0f, 10.0f);
     Quaternion cameraRotation(1.0f, 0.0f, 0.0f, 0.0f);
@@ -26,6 +24,7 @@ int main(int argc, char** argv) {
 
     InputHandler inputHandler(renderer.getWindow());
     CameraController cameraController(&camera, &inputHandler);
+    WorldController worldController(&world, &camera, &inputHandler);
 
     const double desiredFrameTime = 1.0 / 240.0;
     unsigned int frameCount = 0;
@@ -37,6 +36,7 @@ int main(int argc, char** argv) {
         glfwPollEvents();
         double deltaTime = renderer.calcDeltaTime();
         cameraController.update(deltaTime);
+        worldController.update(deltaTime);
         renderer.render();
         glfwSwapBuffers(renderer.getWindow());
 

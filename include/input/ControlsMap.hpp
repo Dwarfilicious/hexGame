@@ -1,19 +1,21 @@
 /* Author: Bas Zoeteman
- * Date of creation: 23-05-2024 */
+ * Date of creation: 28-06-2024
+ * Contains a function to map the keybind strings
+ * to their GLFW counterpart. */
 
-#include "math.hpp"
-#include "Vector3.hpp"
-#include "Quaternion.hpp"
-#include "Transform.hpp"
-#include "InputResponder.hpp"
-
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <nlohmann/json.hpp>
+#include <unordered_map>
+#include <string>
 #include <GLFW/glfw3.h>
 
-std::unordered_map<std::string, int> glfwKeyMap = {
+std::unordered_map<std::string, int> glfwControlsMap = {
+    {"GLFW_MOUSE_BUTTON_LEFT", GLFW_MOUSE_BUTTON_LEFT},
+    {"GLFW_MOUSE_BUTTON_RIGHT", GLFW_MOUSE_BUTTON_RIGHT},
+    {"GLFW_MOUSE_BUTTON_MIDDLE", GLFW_MOUSE_BUTTON_MIDDLE},
+    {"GLFW_MOUSE_BUTTON_4", GLFW_MOUSE_BUTTON_4},
+    {"GLFW_MOUSE_BUTTON_5", GLFW_MOUSE_BUTTON_5},
+    {"GLFW_MOUSE_BUTTON_6", GLFW_MOUSE_BUTTON_6},
+    {"GLFW_MOUSE_BUTTON_7", GLFW_MOUSE_BUTTON_7},
+    {"GLFW_MOUSE_BUTTON_8", GLFW_MOUSE_BUTTON_8},
     {"GLFW_KEY_SPACE", GLFW_KEY_SPACE},
     {"GLFW_KEY_APOSTROPHE", GLFW_KEY_APOSTROPHE},
     {"GLFW_KEY_COMMA", GLFW_KEY_COMMA},
@@ -133,90 +135,6 @@ std::unordered_map<std::string, int> glfwKeyMap = {
     {"GLFW_KEY_RIGHT_CONTROL", GLFW_KEY_RIGHT_CONTROL},
     {"GLFW_KEY_RIGHT_ALT", GLFW_KEY_RIGHT_ALT},
     {"GLFW_KEY_RIGHT_SUPER", GLFW_KEY_RIGHT_SUPER},
-    {"GLFW_KEY_MENU", GLFW_KEY_MENU}
+    {"GLFW_KEY_MENU", GLFW_KEY_MENU},
+    {"GLFW_KEY_UNKNOWN", GLFW_KEY_UNKNOWN},
 };
-
-std::unordered_map<std::string, std::vector<int>> loadKeybinds() {
-    std::unordered_map<std::string, std::vector<int>> keybinds;
-
-    std::string filename = "controls.json";
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file " << filename << std::endl;
-        return keybinds;
-    }
-
-    nlohmann::json json;
-    file >> json;
-
-    for (const auto& keybind : json.items()) {
-        std::string action = keybind.key();
-        std::vector<int> keys;
-        for (const auto& value : keybind.value()) {
-            std::string keyString = value.get<std::string>();
-            if (glfwKeyMap.find(keyString) != glfwKeyMap.end()) {
-                keys.push_back(glfwKeyMap[keyString]);
-            } else {
-                std::cerr << "Unknown key: " << keyString << std::endl;
-            }
-        }
-        keybinds[action] = keys;
-    }
-
-    return keybinds;
-}
-
-InputResponder::InputResponder(Camera* camera) {
-    this->camera = camera;
-    keybinds = loadKeybinds();
-    for (auto& keybind : keybinds) {
-        for (auto& key : keybind.second) {
-            keyStates[key] = false;
-        }
-    }
-}
-
-void InputResponder::handleKeyboard(int key, int action, int mods) {
-    if (keyStates.find(key) != keyStates.end()) {
-        keyStates[key] = (action == GLFW_PRESS || action == GLFW_REPEAT);
-    }
-}
-
-void InputResponder::handleMouse(int button, int state, int x, int y) {
-    const Transform& cameraTransform = camera->getTransform();
-    Vector3 cameraPosition = cameraTransform.position;
-    Quaternion cameraRotation = cameraTransform.rotation;
-}
-
-void InputResponder::update(float deltaTime) {
-    const Transform& cameraTransform = camera->getTransform();
-    Vector3 cameraPosition = cameraTransform.position;
-    Quaternion cameraRotation = cameraTransform.rotation;
-
-    Vector3 cameraDirection = Vector3(0.0f, 0.0f, 0.0f);
-    for (const auto& key : keybinds["move_up"]) {
-        if (keyStates[key]) {
-            cameraDirection += Vector3(0.0f, 1.0f, 0.0f);
-        }
-    }
-    for (const auto& key : keybinds["move_down"]) {
-        if (keyStates[key]) {
-            cameraDirection += Vector3(0.0f, -1.0f, 0.0f);
-        }
-    }
-    for (const auto& key : keybinds["move_left"]) {
-        if (keyStates[key]) {
-            cameraDirection += Vector3(-1.0f, 0.0f, 0.0f);
-        }
-    }
-    for (const auto& key : keybinds["move_right"]) {
-        if (keyStates[key]) {
-            cameraDirection += Vector3(1.0f, 0.0f, 0.0f);
-        }
-    }
-
-    if (cameraDirection.magnitude() > 0.0f) {
-        cameraDirection.normalize();
-        camera->move(cameraDirection * camera->getCameraVelocity() * deltaTime);
-    }
-}

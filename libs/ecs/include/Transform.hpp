@@ -17,5 +17,7 @@ public:
 
     Transform(Vector3 position = Vector3(), Quaternion rotation = Quaternion(), float scale = 1.0f);
 
+    Vector3 transformPoint(const Vector3& point) const;
+
     Matrix4 getMatrix() const;
 };

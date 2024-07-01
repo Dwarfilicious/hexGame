@@ -9,6 +9,7 @@
 
 #include "Vector3.hpp"
 #include "Vertex.hpp"
+#include "Transform.hpp"
 
 class Mesh {
 private:
@@ -17,6 +18,8 @@ private:
 
 public:
     Mesh() = default;
+
+    bool contains2D(const Vector3& point, const Transform& transform) const;
 
     const std::vector<Vertex>& getVertices() const;
     const std::vector<unsigned int>& getIndices() const;
@@ -28,4 +31,6 @@ public:
     bool isEmpty() const;
     size_t getVertexCount() const;
     size_t getIndexCount() const;
+
+    void setColor(const Color& color);
 };

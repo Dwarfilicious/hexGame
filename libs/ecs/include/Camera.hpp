@@ -27,6 +27,6 @@ public:
     void move(const Vector3& direction);
     void rotate(const Quaternion& rotation);
 
-    Matrix4 getProjectionMatrix(int windowWidth, int windowHeight) const;
+    Matrix4 getProjectionMatrix() const;
     Matrix4 getViewMatrix() const;
 };

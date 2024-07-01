@@ -13,9 +13,8 @@
 #include <array>
 
 class Tile : public Entity {
-private:
-    TileType type;
-
 public:
     Tile(Vector3 center, float radius = 1.0f);
+
+    TileType type;
 };

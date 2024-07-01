@@ -29,9 +29,9 @@ void Camera::rotate(const Quaternion& rotation) {
     transform.rotation += rotation;
 }
 
-Matrix4 Camera::getProjectionMatrix(int windowWidth, int windowHeight) const {
+Matrix4 Camera::getProjectionMatrix() const {
     Matrix4 projection;
-    float aspectRatio = static_cast<float>(windowWidth) / static_cast<float>(windowHeight);
+    float aspectRatio = 16.0f / 9.0f;
     float fovInRadians = fov * M_PI / 180.0f;
     float f = 1.0f / std::tan(fovInRadians / 2.0f);
     projection.data[0] = f / aspectRatio;
