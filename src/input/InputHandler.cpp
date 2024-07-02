@@ -61,11 +61,15 @@ InputHandler::InputHandler(GLFWwindow* window) : window(window) {
     for (auto& buttons : controls) {
         for (auto& button : buttons.second) {
             buttonStates[button] = false;
+            buttonActions[button] = ButtonAction::NONE;
         }
     }
     buttonStates[GLFW_MOUSE_BUTTON_LEFT] = false;
     buttonStates[GLFW_MOUSE_BUTTON_RIGHT] = false;
     buttonStates[GLFW_KEY_ESCAPE] = false;
+    buttonActions[GLFW_MOUSE_BUTTON_LEFT] = ButtonAction::NONE;
+    buttonActions[GLFW_MOUSE_BUTTON_RIGHT] = ButtonAction::NONE;
+    buttonActions[GLFW_KEY_ESCAPE] = ButtonAction::NONE;
 
     gHandler = this;
     glfwSetKeyCallback(window, globalKeyCallback);
@@ -77,12 +81,14 @@ InputHandler::InputHandler(GLFWwindow* window) : window(window) {
 void InputHandler::handleKeyboard(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (buttonStates.find(key) != buttonStates.end()) {
         buttonStates[key] = (action == GLFW_PRESS || action == GLFW_REPEAT);
+        buttonActions[key] = static_cast<ButtonAction>(action);
     }
 }
 
 void InputHandler::handleMouseButton(GLFWwindow* window, int button, int action, int mods) {
     if (buttonStates.find(button) != buttonStates.end()) {
         buttonStates[button] = (action == GLFW_PRESS);
+        buttonActions[button] = static_cast<ButtonAction>(action);
     }
 }
 
@@ -92,6 +98,12 @@ void InputHandler::handleCursorPos(GLFWwindow* window, double xpos, double ypos)
 
 void InputHandler::handleScroll(GLFWwindow* window, double xoffset, double yoffset) {
     // Do nothing
+}
+
+void InputHandler::resetButtonActions() {
+    for (auto& button : buttonActions) {
+        button.second = ButtonAction::NONE;
+    }
 }
 
 void InputHandler::getWindowSize(int& width, int& height) const {

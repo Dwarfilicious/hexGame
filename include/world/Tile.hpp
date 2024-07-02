@@ -9,12 +9,18 @@
 #include "Entity.hpp"
 #include "Vector3.hpp"
 #include "Mesh.hpp"
+#include "Color.hpp"
 
 #include <array>
 
 class Tile : public Entity {
+private:
+    TileType tileType;
+
 public:
     Tile(Vector3 center, float radius = 1.0f);
 
-    TileType type;
+    const Color getColor() const;
+
+    void setColor(const Color& color);
 };

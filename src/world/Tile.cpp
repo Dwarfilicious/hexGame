@@ -13,8 +13,8 @@ Tile::Tile(Vector3 center, float radius)
     : Entity(Transform(center, Quaternion(), 1.0f)) {
     mesh = Mesh();
 
-    TileType type = getRandomTileType();
-    Color color = tileTypeToColor[type];
+    tileType = getRandomTileType();
+    Color color = tileTypeToColor[tileType];
 
     Vertex centerVertex = Vertex(Vector3(0, 0, 0), color);
     mesh.addVertex(centerVertex);
@@ -34,4 +34,12 @@ Tile::Tile(Vector3 center, float radius)
         mesh.addIndex(i);
         mesh.addIndex(i % 6 + 1);
     }
+}
+
+const Color Tile::getColor() const {
+    return tileTypeToColor[tileType];
+}
+
+void Tile::setColor(const Color& color) {
+    mesh.setColor(color);
 }

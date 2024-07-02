@@ -12,7 +12,7 @@
 
 WorldController::WorldController(World* world, Camera* camera, InputHandler* inputHandler)
 : world(world), camera(camera), inputHandler(inputHandler),
-  controls(inputHandler->getControls()), buttonStates(inputHandler->getButtonStates()) {}
+  controls(inputHandler->getControls()), buttonActions(inputHandler->getButtonActions()) {}
 
 // at some point, ray casting needs to be moved to be part of the engine
 Vector3 rayCastFromCameraToXYPlane(Camera* camera, InputHandler* inputHandler) {
@@ -46,19 +46,25 @@ Vector3 rayCastFromCameraToXYPlane(Camera* camera, InputHandler* inputHandler) {
     return intersectionPoint;
 }
 
-void WorldController::selectTile() {
-    if (buttonStates.at(GLFW_MOUSE_BUTTON_LEFT)) {
-        Vector3 worldPosition = rayCastFromCameraToXYPlane(camera, inputHandler);
-        selectedTile = world->getTileAt(worldPosition);
-    }
-    else {
-        selectedTile = nullptr;
-    }
+Tile* WorldController::getTile() {
+    Vector3 worldPosition = rayCastFromCameraToXYPlane(camera, inputHandler);
+    return world->getTileAt(worldPosition);
 }
 
 void WorldController::update(double deltaTime) {
-    selectTile();
-    if (selectedTile != nullptr) {
+    hoveredTile = getTile();
+    if (hoveredTile != nullptr && buttonActions.at(GLFW_MOUSE_BUTTON_LEFT) == ButtonAction::PRESS) {
+        if (selectedTile != nullptr) {
+            selectedTile->setColor(selectedTileColor);
+        }
+
+        if (selectedTile == hoveredTile) {
+            selectedTile = nullptr;
+            return;
+        }
+
+        selectedTile = hoveredTile;
+        selectedTileColor = selectedTile->getColor();
         selectedTile->setColor(Color(1.0f, 0.0f, 0.0f));
     }
 }

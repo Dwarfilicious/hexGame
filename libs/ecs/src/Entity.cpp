@@ -21,7 +21,3 @@ void Entity::setTransform(const Transform& transform) {
 const Mesh& Entity::getMesh() const {
     return mesh;
 }
-
-void Entity::setColor(const Color& color) {
-    mesh.setColor(color);
-}

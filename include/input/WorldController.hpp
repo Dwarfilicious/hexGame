@@ -10,6 +10,7 @@
 #include "Camera.hpp"
 #include "Tile.hpp"
 #include "Vector3.hpp"
+#include "Color.hpp"
 
 #include <unordered_map>
 #include <string>
@@ -21,13 +22,14 @@ private:
     World* world;
     Camera* camera;
 
-    Tile* selectedTile;
+    Tile* hoveredTile = nullptr;
+    Tile* selectedTile = nullptr;
+    Color selectedTileColor = Color(1.0f, 1.0f, 1.0f);
 
     const std::unordered_map<std::string, std::vector<int>>& controls;
-    const std::unordered_map<int, bool>& buttonStates;
+    const std::unordered_map<int, ButtonAction>& buttonActions;
 
-    Vector3 screenToWorld(const Vector3& mousePosition) const;
-    void selectTile();
+    Tile* getTile();
 
 public:
     WorldController(World* world, Camera* camera, InputHandler* inputHandler);

@@ -10,12 +10,20 @@
 #include <vector>
 #include <GLFW/glfw3.h>
 
+enum class ButtonAction {
+    PRESS = GLFW_PRESS,
+    RELEASE = GLFW_RELEASE,
+    REPEAT = GLFW_REPEAT,
+    NONE = -1
+};
+
 class InputHandler {
 private:
     GLFWwindow* window;
 
     std::unordered_map<std::string, std::vector<int>> controls;
     std::unordered_map<int, bool> buttonStates;
+    std::unordered_map<int, ButtonAction> buttonActions;
 
 public:
     InputHandler(GLFWwindow* window);
@@ -25,9 +33,12 @@ public:
     void handleCursorPos(GLFWwindow* window, double xpos, double ypos);
     void handleScroll(GLFWwindow* window, double xoffset, double yoffset);
 
+    void resetButtonActions();
+
     GLFWwindow* getWindow() const { return window; }
     void getWindowSize(int& width, int& height) const;
 
     const std::unordered_map<std::string, std::vector<int>>& getControls() const { return controls; }
     const std::unordered_map<int, bool>& getButtonStates() const { return buttonStates; }
+    const std::unordered_map<int, ButtonAction>& getButtonActions() const { return buttonActions; }
 };

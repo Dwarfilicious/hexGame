@@ -15,7 +15,7 @@
 #include <GLFW/glfw3.h>
 
 int main(int argc, char** argv) {
-    World world(30, 10, 1.0f);
+    World world(10, 10, 1.0f);
 
     Vector3 cameraPosition(0.0f, 0.0f, 10.0f);
     Quaternion cameraRotation(1.0f, 0.0f, 0.0f, 0.0f);
@@ -33,10 +33,13 @@ int main(int argc, char** argv) {
     while (!glfwWindowShouldClose(renderer.getWindow())) {
         double start = glfwGetTime();
 
+        inputHandler.resetButtonActions();
         glfwPollEvents();
+
         double deltaTime = renderer.calcDeltaTime();
         cameraController.update(deltaTime);
         worldController.update(deltaTime);
+
         renderer.render();
         glfwSwapBuffers(renderer.getWindow());
 
