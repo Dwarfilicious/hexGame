@@ -2,7 +2,6 @@
  * Date of creation: 21-05-2024 */
 
 #include "Mesh.hpp"
-#include <iostream>
 
 bool rayIntersectsEdge2D(const Vector3& point, const Vector3& edgeStart, const Vector3& edgeEnd) {
     if ((point.y < edgeStart.y) != (point.y < edgeEnd.y)) {

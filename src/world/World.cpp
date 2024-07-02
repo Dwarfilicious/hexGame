@@ -5,7 +5,6 @@
 #include "Tile.hpp"
 
 #include <cmath>
-#include <iostream>
 
 World::World(int q, int r, float tileRadius) {
     float tileWidth = tileRadius * std::sqrt(3.0);

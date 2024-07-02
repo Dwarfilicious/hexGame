@@ -10,6 +10,7 @@
 #include "InputHandler.hpp"
 #include "CameraController.hpp"
 #include "WorldController.hpp"
+#include "diagnostics/FPSController.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -26,9 +27,8 @@ int main(int argc, char** argv) {
     CameraController cameraController(&camera, &inputHandler);
     WorldController worldController(&world, &camera, &inputHandler);
 
-    const double desiredFrameTime = 1.0 / 240.0;
-    unsigned int frameCount = 0;
-    double lastTime = glfwGetTime();
+    double frameRateLimit = 240.0;
+    FPSController fpsController(renderer.getWindow(), frameRateLimit);
 
     while (!glfwWindowShouldClose(renderer.getWindow())) {
         double start = glfwGetTime();
@@ -40,23 +40,8 @@ int main(int argc, char** argv) {
         renderer.render();
         glfwSwapBuffers(renderer.getWindow());
 
-        frameCount++;
-        double currentTime = glfwGetTime();
-        auto timeDiff = currentTime - lastTime;
-        if (timeDiff >= 1.0) {
-            double fps = frameCount / timeDiff;
-            frameCount = 0;
-            lastTime = currentTime;
-            std::string fpsTitle = "hexGame | FPS: " + std::to_string(fps);
-            glfwSetWindowTitle(renderer.getWindow(), fpsTitle.c_str());
-        }
-
-        double end = glfwGetTime();
-        double timeToWait = desiredFrameTime - (end - start);
-        while (timeToWait > 0) {
-            end = glfwGetTime();
-            timeToWait = desiredFrameTime - (end - start);
-        }
+        fpsController.calcFPS();
+        fpsController.limitFPS(start);
     }
 
     return 0;

@@ -9,7 +9,6 @@
 #include "math.hpp"
 
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 WorldController::WorldController(World* world, Camera* camera, InputHandler* inputHandler)
 : world(world), camera(camera), inputHandler(inputHandler),
