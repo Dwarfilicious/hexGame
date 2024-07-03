@@ -18,9 +18,13 @@ private:
     TileType tileType;
 
 public:
-    Tile(Vector3 center, float radius = 1.0f);
+    int q, r;
+
+    Tile(Vector3 center, int q, int r);
 
     const Color getColor() const;
+    const TileType getTileType() const;
 
     void setColor(const Color& color);
+    void setTileType(TileType tileType);
 };

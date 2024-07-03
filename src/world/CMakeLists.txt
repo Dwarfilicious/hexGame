@@ -5,6 +5,7 @@ add_library(world
 )
 
 target_include_directories(world PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/world
 )
 

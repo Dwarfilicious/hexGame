@@ -15,7 +15,7 @@
 #include <GLFW/glfw3.h>
 
 int main(int argc, char** argv) {
-    World world(10, 10, 1.0f);
+    World world = World::importFromFile("testMap.json");
 
     Vector3 cameraPosition(0.0f, 0.0f, 10.0f);
     Quaternion cameraRotation(1.0f, 0.0f, 0.0f, 0.0f);

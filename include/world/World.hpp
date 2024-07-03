@@ -14,11 +14,12 @@
 class World {
 private:
     EntityContainer entityContainer;
-    float width;
-    float height;
+    int q, r;
+    float width, height;
 
 public:
-    World(int q, int r, float tileRadius = 1.0f);
+    World(int q, int r);
+    static World randomMap(int q, int r);
 
     Tile* getTileAt(Vector3 worldPosition) const;
 
@@ -27,4 +28,7 @@ public:
 
     float getWidth() const;
     float getHeight() const;
+
+    void exportToFile(const std::string& filename) const;
+    static World importFromFile(const std::string& filename);
 };
