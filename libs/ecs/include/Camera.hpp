@@ -9,6 +9,7 @@
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
 #include "Matrix4.hpp"
+#include "RayCast.hpp"
 
 class Camera {
 private:
@@ -29,4 +30,6 @@ public:
 
     Matrix4 getProjectionMatrix() const;
     Matrix4 getViewMatrix() const;
+
+    Ray ndcToRay(const Vector3& ndc) const;
 };

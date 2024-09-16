@@ -3,6 +3,7 @@ add_library(ecs STATIC
     src/Entity.cpp
     src/EntityContainer.cpp
     src/Mesh.cpp
+    src/RayCast.cpp
     src/Transform.cpp
     src/Vertex.cpp
 )

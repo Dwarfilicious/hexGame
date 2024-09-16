@@ -14,40 +14,12 @@ WorldController::WorldController(World* world, Camera* camera, InputHandler* inp
 : world(world), camera(camera), inputHandler(inputHandler),
   controls(inputHandler->getControls()), buttonActions(inputHandler->getButtonActions()) {}
 
-// at some point, ray casting needs to be moved to be part of the engine
-Vector3 rayCastFromCameraToXYPlane(Camera* camera, InputHandler* inputHandler) {
-    // Step 1: Get Mouse Position
-    double mouseX, mouseY;
-    glfwGetCursorPos(inputHandler->getWindow(), &mouseX, &mouseY);
-
-    // Step 2: Convert to NDC
-    int screenWidth, screenHeight;
-    inputHandler->getWindowSize(screenWidth, screenHeight);
-    double ndcX = (2.0 * mouseX) / screenWidth - 1.0;
-    double ndcY = 1.0 - (2.0 * mouseY) / screenHeight;
-
-    // Step 3 & 4: Convert to Clip Coordinates and then to Eye Coordinates
-    Vector4 clipCoords(ndcX, ndcY, -1.0, 1.0);
-    Matrix4 inverseProjectionMatrix = Matrix4::inverse(camera->getProjectionMatrix());
-    Vector4 eyeCoords = inverseProjectionMatrix * clipCoords;
-    eyeCoords.z = -1.0; eyeCoords.w = 0.0;
-
-    // Step 5: Convert to World Coordinates
-    Matrix4 inverseViewMatrix = Matrix4::inverse(camera->getViewMatrix());
-    Vector4 rayWorld = inverseViewMatrix * eyeCoords;
-    Vector3 rayDirection(rayWorld.x, rayWorld.y, rayWorld.z);
-    rayDirection.normalize();
-
-    // Step 6: Ray-Plane Intersection
-    Vector3 cameraPosition = camera->getTransform().position;
-    float t = -cameraPosition.z / rayDirection.z; // Assuming camera is above the x,y-plane and looking downwards
-    Vector3 intersectionPoint = cameraPosition + rayDirection * t;
-
-    return intersectionPoint;
-}
-
 Tile* WorldController::getTile() {
-    Vector3 worldPosition = rayCastFromCameraToXYPlane(camera, inputHandler);
+    Vector3 ndc = inputHandler->getNDCFromCursorPos();
+
+    Ray ray = camera->ndcToRay(ndc);
+    Vector3 worldPosition = ray.rayCastToXYPlane(0.0f);
+
     return world->getTileAt(worldPosition);
 }
 

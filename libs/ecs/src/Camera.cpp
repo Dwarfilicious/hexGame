@@ -54,3 +54,19 @@ Matrix4 Camera::getViewMatrix() const {
 
     return viewMatrix;
 }
+
+Ray Camera::ndcToRay(const Vector3 &ndc) const {
+    // Step 1 & 2: Convert to Clip Coordinates and then to Eye Coordinates
+    Vector4 clipCoords(ndc.x, ndc.y, -1.0f, 1.0f);
+    Matrix4 inverseProjectionMatrix = Matrix4::inverse(getProjectionMatrix());
+    Vector4 eyeCoords = inverseProjectionMatrix * clipCoords;
+    eyeCoords.z = -1.0f; eyeCoords.w = 0.0f;
+
+    // Step 3: Convert to World Coordinates
+    Matrix4 inverseViewMatrix = Matrix4::inverse(getViewMatrix());
+    Vector4 rayWorld = inverseViewMatrix * eyeCoords;
+    Vector3 rayDirection(rayWorld.x, rayWorld.y, rayWorld.z);
+    rayDirection.normalize();
+
+    return Ray(transform.position, rayDirection);
+}

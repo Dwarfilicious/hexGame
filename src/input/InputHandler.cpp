@@ -109,3 +109,15 @@ void InputHandler::resetButtonActions() {
 void InputHandler::getWindowSize(int& width, int& height) const {
     glfwGetWindowSize(window, &width, &height);
 }
+
+const Vector3 InputHandler::getNDCFromCursorPos() const {
+    double mouseX, mouseY;
+    glfwGetCursorPos(window, &mouseX, &mouseY);
+
+    int screenWidth, screenHeight;
+    getWindowSize(screenWidth, screenHeight);
+    double ndcX = (2.0 * mouseX) / screenWidth - 1.0;
+    double ndcY = 1.0 - (2.0 * mouseY) / screenHeight;
+
+    return Vector3(ndcX, ndcY, 0.0f);
+}
