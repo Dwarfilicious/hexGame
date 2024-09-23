@@ -9,11 +9,10 @@
 
 #include <cmath>
 
-Tile::Tile(Vector3 center, int q, int r)
-: Entity(Transform(center, Quaternion(), 1.0f)), q(q), r(r) {
+Tile::Tile(Vector3 center, int q, int r, TileType tileType)
+: Entity(Transform(center, Quaternion(), 1.0f)), q(q), r(r), tileType(tileType) {
     mesh = Mesh();
 
-    tileType = getRandomTileType();
     Color color = tileTypeToColor[tileType];
 
     Vertex centerVertex = Vertex(Vector3(0, 0, 0), color);
@@ -36,12 +35,28 @@ Tile::Tile(Vector3 center, int q, int r)
     }
 }
 
+const int Tile::getQ() const {
+    return q;
+}
+
+const int Tile::getR() const {
+    return r;
+}
+
 const Color Tile::getColor() const {
     return tileTypeToColor[tileType];
 }
 
 const TileType Tile::getTileType() const {
     return tileType;
+}
+
+void Tile::setQ(int q) {
+    this->q = q;
+}
+
+void Tile::setR(int r) {
+    this->r = r;
 }
 
 void Tile::setColor(const Color& color) {

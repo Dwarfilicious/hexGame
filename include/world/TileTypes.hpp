@@ -9,11 +9,12 @@
 #include <map>
 
 enum class TileType {
-    WATER = 0,
-    GRASSLAND = 1,
-    HILLS = 2,
-    FOREST = 3,
-    MOUNTAIN = 4,
+    OCEAN = 0,
+    COAST = 1,
+    GRASSLAND = 2,
+    HILLS = 3,
+    FOREST = 4,
+    MOUNTAIN = 5,
     COUNT
 };
 

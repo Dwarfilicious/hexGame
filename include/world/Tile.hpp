@@ -15,16 +15,19 @@
 
 class Tile : public Entity {
 private:
+    int q, r;
     TileType tileType;
 
 public:
-    int q, r;
+    Tile(Vector3 center, int q, int r, TileType tileType);
 
-    Tile(Vector3 center, int q, int r);
-
+    const int getQ() const;
+    const int getR() const;
     const Color getColor() const;
     const TileType getTileType() const;
 
+    void setQ(int q);
+    void setR(int r);
     void setColor(const Color& color);
     void setTileType(TileType tileType);
 };

@@ -17,7 +17,8 @@ TileType getRandomTileType() {
 }
 
 std::map<TileType, Color> tileTypeToColor = {
-    {TileType::WATER, Color(0.2f, 0.6f, 1.0f)},
+    {TileType::OCEAN, Color(0.0f, 0.0f, 1.0f)},
+    {TileType::COAST, Color(0.2f, 0.6f, 1.0f)},
     {TileType::GRASSLAND, Color(0.0f, 1.0f, 0.0f)},
     {TileType::HILLS, Color(0.5f, 0.3f, 0.0f)},
     {TileType::FOREST, Color(0.0f, 0.5f, 0.0f)},

@@ -15,7 +15,7 @@
 #include <GLFW/glfw3.h>
 
 int main(int argc, char** argv) {
-    World world = World::importFromFile("testMap.json");
+    World world = World::pangaeaMap(60, 38);
 
     Vector3 cameraPosition(0.0f, 0.0f, 10.0f);
     Quaternion cameraRotation(1.0f, 0.0f, 0.0f, 0.0f);
