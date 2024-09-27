@@ -14,11 +14,11 @@
 class World {
 private:
     EntityContainer entityContainer;
-    int q, r;
+    int u, v;
     float width, height;
 
 public:
-    World(int q, int r);
+    World(int u, int v);
 
     Tile* getTileAt(Vector3 worldPosition) const;
 
@@ -32,5 +32,4 @@ public:
     static World importFromFile(const std::string& filename);
 
     static World randomMap(int q, int r);
-    static World pangaeaMap(int q, int r);
 };

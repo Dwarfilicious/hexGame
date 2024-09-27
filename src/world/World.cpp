@@ -22,8 +22,25 @@ std::pair<float, float> qrToXY(int q, int r) {
     return std::make_pair(x, y);
 }
 
-World::World(int q, int r)
-: q(q), r(r) {}
+std::pair<float, float> uvToQR(int u, int v) {
+    int q = u - (v / 2);
+    int r = v;
+    return std::make_pair(q, r);
+}
+
+std::pair<int, int> qrToUV(int q, int r) {
+    int u = q + (r / 2);
+    int v = r;
+    return std::make_pair(u, v);
+}
+
+std::pair<float, float> uvToXY(int u, int v) {
+    std::pair<int, int> qr = uvToQR(u, v);
+    return qrToXY(qr.first, qr.second);
+}
+
+World::World(int u, int v)
+: u(u), v(v) {}
 
 Tile* World::getTileAt(Vector3 worldPosition) const {
     for (const auto& entity : entityContainer.getEntities()) {
@@ -53,8 +70,8 @@ float World::getHeight() const {
 
 void World::exportToFile(const std::string& filename) const {
     nlohmann::json json;
-    json["q"] = q;
-    json["r"] = r;
+    json["u"] = u;
+    json["v"] = v;
     for (const auto& entity : entityContainer.getEntities()) {
         Tile* tile = dynamic_cast<Tile*>(entity.get());
         if (tile != nullptr) {
@@ -85,9 +102,9 @@ World World::importFromFile(const std::string& filename) {
     file >> json;
     file.close();
 
-    int q = json["q"];
-    int r = json["r"];
-    World world(q, r);
+    int u = json["u"];
+    int v = json["v"];
+    World world(u, v);
 
     for (const auto& tileJson : json["tiles"]) {
         int q = tileJson["q"];
@@ -102,59 +119,75 @@ World World::importFromFile(const std::string& filename) {
     return world;
 }
 
-World World::randomMap(int q, int r) {
-    World world(q, r);
-
-    for (int i = 0; i < q; i++) {
-        for (int j = 0; j < r; j++) {
-            std::pair<float, float> xy = qrToXY(i, j);
-            float x = xy.first;
-            float y = xy.second;
-            world.entityContainer.addEntity(std::make_unique<Tile>(Vector3(x, y, 0), i, j, getRandomTileType()));
-        }
-    }
-
-    return world;
-}
-
 #define WATER_BORDER_RANGE 3
 #define INIT_POS_MARGIN 5
+#define PATH_LENGTH_MIN 10
 #define PATH_LENGTH_MAX 64
 
-World World::pangaeaMap(int q, int r) {
-    World world(q, r);
-    int numTiles = q * r;
+World World::randomMap(int u, int v) {
+    World world(u, v);
+    int numTiles = u * v;
     float desiredLandMass = 0.3f;
 
     int totalLandMass = 0;
-    int geographyMap[q][r];
-    for (int i = 0; i < q; i++) {
-        for (int j = 0; j < r; j++) {
+    int geographyMap[u][v];
+    for (int i = 0; i < u; i++) {
+        for (int j = 0; j < v; j++) {
             geographyMap[i][j] = 0;
         }
     }
 
-    int stencilMap[q][r];
+    int stencilMap[u][v];
     while ((float) totalLandMass / numTiles < desiredLandMass) {
-        for (int i = 0; i < q; i++) {
-            for (int j = 0; j < r; j++) {
+        for (int i = 0; i < u; i++) {
+            for (int j = 0; j < v; j++) {
                 stencilMap[i][j] = 0;
             }
         }
 
-        int pathLength = (rand() % PATH_LENGTH_MAX) + 1;
+        int pathLength = (rand() % PATH_LENGTH_MAX - (PATH_LENGTH_MIN - 1)) + PATH_LENGTH_MIN;
 
-        int i = rand() % (q - 2 * INIT_POS_MARGIN) + INIT_POS_MARGIN;
-        int j = rand() % (r - 2 * INIT_POS_MARGIN) + INIT_POS_MARGIN;
+        int i = rand() % (u - 2 * INIT_POS_MARGIN) + INIT_POS_MARGIN;
+        int j = rand() % (v - 2 * INIT_POS_MARGIN) + INIT_POS_MARGIN;
+
         while (pathLength > 0) {
-            if (i < 0 + WATER_BORDER_RANGE || i >= q - 1 - WATER_BORDER_RANGE || j < 0 + WATER_BORDER_RANGE || j >= r - 1 - WATER_BORDER_RANGE) {
+            pathLength--;
+
+            // check boundaries in u,v
+            if (i < 0 + WATER_BORDER_RANGE || i >= u - WATER_BORDER_RANGE) {
+                break;
+            }
+            if (j < 0 + WATER_BORDER_RANGE || j >= v - WATER_BORDER_RANGE) {
                 break;
             }
 
-            stencilMap[i][j] = 1;
-            stencilMap[i + 1][j] = 1;
-            stencilMap[i][j + 1] = 1;
+            // drawing based on q,r, but in u,v
+            std::pair<int, int> qr = uvToQR(i, j);
+            i = qr.first;
+            j = qr.second;
 
+            std::pair<int, int> brush = qrToUV(i, j);
+            stencilMap[brush.first][brush.second] = 1;
+
+            brush = qrToUV(i + 1, j);
+            stencilMap[brush.first][brush.second] = 1;
+
+            brush = qrToUV(i, j + 1);
+            stencilMap[brush.first][brush.second] = 1;
+
+            brush = qrToUV(i - 1, j + 1);
+            stencilMap[brush.first][brush.second] = 1;
+
+            brush = qrToUV(i - 1, j);
+            stencilMap[brush.first][brush.second] = 1;
+
+            brush = qrToUV(i, j - 1);
+            stencilMap[brush.first][brush.second] = 1;
+
+            brush = qrToUV(i + 1, j - 1);
+            stencilMap[brush.first][brush.second] = 1;
+
+            // movement in q,r
             int direction = rand() % 6;
             switch (direction) {
                 case 0:
@@ -178,10 +211,14 @@ World World::pangaeaMap(int q, int r) {
                     j--;
                     break;
             }
+
+            std::pair<int, int> uv = qrToUV(i, j);
+            i = uv.first;
+            j = uv.second;
         }
 
-        for (int i = 0; i < q; i++) {
-            for (int j = 0; j < r; j++) {
+        for (int i = 0; i < u; i++) {
+            for (int j = 0; j < v; j++) {
                 if (geographyMap[i][j] == 0 && stencilMap[i][j] == 1) {
                     totalLandMass++;
                 }
@@ -190,13 +227,16 @@ World World::pangaeaMap(int q, int r) {
         }
     }
 
-    for (int i = 0; i < q; i++) {
-        for (int j = 0; j < r; j++) {
-            std::pair<float, float> xy = qrToXY(i, j);
+    for (int i = 0; i < u; i++) {
+        for (int j = 0; j < v; j++) {
+            std::pair<float, float> xy = uvToXY(i, j);
             float x = xy.first;
             float y = xy.second;
+            std::pair<int, int> qr = uvToQR(i, j);
+            int q = qr.first;
+            int r = qr.second;
             TileType tileType = geographyMap[i][j] == 0 ? TileType::OCEAN : TileType::GRASSLAND;
-            world.entityContainer.addEntity(std::make_unique<Tile>(Vector3(x, y, 0), i, j, tileType));
+            world.entityContainer.addEntity(std::make_unique<Tile>(Vector3(x, y, 0), q, r, tileType));
         }
     }
 
